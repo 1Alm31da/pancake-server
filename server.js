@@ -11,7 +11,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-      origin: "https://main--rad-biscuit-e4fd43.netlify.app",
+      origin: "*",
       methods: ["GET", "POST"],
     },
 });
