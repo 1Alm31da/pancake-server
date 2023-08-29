@@ -1,10 +1,19 @@
+const express = require("express");
+const app = express();
+const http = require("http");
+const cors = require("cors");
 const mongoose = require("mongoose");
+const { Server } = require("socket.io");
 
-const io = require('socket.io')(3001, {
+app.use(cors());
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
     cors: {
-        origin: 'https://rad-biscuit-e4fd43.netlify.app',
-        methods: ['GET','POST']
-    }
+      origin: "https://main--rad-biscuit-e4fd43.netlify.app",
+      methods: ["GET", "POST"],
+    },
 });
 
 var username = encodeURIComponent("1Alm31da");
@@ -38,7 +47,7 @@ io.on('connection', async socket => {
     socket.on('save-seats', async data => {
 
         let dataToSave = await seatTickets.findById('64edf0164f4f934a03829849')
-        console.log(dataToSave)
+        console.log(dataToSave._id)
         dataToSave.row1 = data.row1
         dataToSave.row2 = data.row2
         dataToSave.row3 = data.row3
@@ -49,8 +58,6 @@ io.on('connection', async socket => {
         dataToSave.row8 = data.row8
         dataToSave.row9 = data.row9
         dataToSave.row10 = data.row10
-    
-        //console.log(dataToSave)
         await dataToSave.save();
         i++
     })
@@ -71,3 +78,7 @@ io.on('connection', async socket => {
     socket.emit('inicial-seats', seatsData)
     console.log('connected')
 });
+
+server.listen(3001, () => {
+    console.log("SERVER RUNNING");
+  });
