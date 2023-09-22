@@ -3,16 +3,26 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const { Server } = require("socket.io");
+//const { Server } = require("socket.io");
 
 app.use(cors());
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
+/*const io = new Server(server, {
     cors: {
       origin: "*",
+      credentials: true
     },
+});*/
+
+const io = require("socket.io")(server, {
+    path: '/api/socket.io',
+});
+
+io.engine.on('headers', (headers, req) => {
+    headers['Access-Control-Allow-Origin'] = 'https://rad-biscuit-e4fd43.netlify.app';
+    headers['Access-Control-Allow-Credentials'] = true;
 });
 
 var username = encodeURIComponent("1Alm31da");
